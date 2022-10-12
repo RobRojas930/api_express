@@ -1,0 +1,62 @@
+{
+    "hidefiles.configurationType": "local",
+    "hidefiles.globalConfig": {
+        "profiles": [
+            {
+                "name": "Default",
+                "detail": "",
+                "description": "Test",
+                "hidden": [
+                    ".vscode/"
+                ]
+            },
+            {
+                "name": "Strict",
+                "detail": "Hide everything not immediately required",
+                "hidden": [
+                    "$Default",
+                    "app/network/clients.router.js",
+                    "app/network/employee.router.js",
+                    "app/network/clients.router.js",
+                    "app/service/clients.service.js",
+                    "app/service/employee.service.js",
+                    "app/service/order.service.js",
+                    "app/data/models/assignment.model.js",
+                    "app/data/models/employee.model.js",
+                    "app/data/models/order.model.js",
+                    "app/data/models/client.model.js",
+                    "app/data/dtos/assignment.dto.js",
+                    "app/data/dtos/client.dto.js",
+                    "app/data/dtos/employee.dto.js",
+                    "app/data/dtos/order.dto.js",
+                    "app/data/models/secondary/",
+                    "app/network/order.router.js"
+                ]
+            }
+        ]
+    },
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        ".vscode/": true,
+        "app/network/clients.router.js": true,
+        "app/network/employee.router.js": true,
+        "app/service/clients.service.js": true,
+        "app/service/employee.service.js": true,
+        "app/service/order.service.js": true,
+        "app/data/models/assignment.model.js": true,
+        "app/data/models/employee.model.js": true,
+        "app/data/models/order.model.js": true,
+        "app/data/models/client.model.js": true,
+        "app/data/dtos/assignment.dto.js": true,
+        "app/data/dtos/client.dto.js": true,
+        "app/data/dtos/employee.dto.js": true,
+        "app/data/dtos/order.dto.js": true,
+        "app/data/models/secondary/": true,
+        "app/network/order.router.js": true
+    },
+    "hidefiles.selectedProfile": "Strict"
+}

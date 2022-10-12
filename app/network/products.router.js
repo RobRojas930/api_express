@@ -1,20 +1,24 @@
 const express = require('express');
 const ProductService = require('../service/product.service');
-const CategoriesService = require('../services/categories.service');
+const service = new ProductService();
+const CategoriesService = require('../service/categories.service');
+const categoriesService = new CategoriesService();
+const SubCategoriesService = require('../service/subcategories.service');
+const subCategoriesService = new SubCategoriesService();
 const validatorHandler = require('../network/middlewares/validator.handler');
 const {
   createProductDto,
   updateProductDto,
-  getProductDto,
-  getProductCategoriesId,
+  getProductIdDto,
 } = require('../data/dtos/product.dto');
+const checkRolHandler = require('../network/middlewares/checkRol.handler');
+const authHandler = require('./middlewares/auth.handler');
 
-const service = new ProductService();
-const categoriesService = new CategoriesService();
 const router = express.Router();
 
 //SE USA NEXT PARA ACCEDER AL SIGUIENTE MIDDLEWARE
-router.get('/', async (req, res, next) => {
+router.get('/', authHandler, checkRolHandler(['admin']), async (req, res, next) => {
+  const user = req.user;
   const { limit, priceRange, getBrands } = req.query;
   const filter = req.body;
   try {
@@ -28,6 +32,7 @@ router.get('/', async (req, res, next) => {
       success: true,
       message: 'Estos son todos los productos',
       data: products,
+      user: user,
     });
   } catch (error) {
     next(error);
@@ -36,7 +41,8 @@ router.get('/', async (req, res, next) => {
 
 router.get(
   '/:id',
-  validatorHandler(getProductDto, 'params'),
+  authHandler,
+  validatorHandler(getProductIdDto, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -54,6 +60,7 @@ router.get(
 
 router.post(
   '/',
+  authHandler,
   validatorHandler(createProductDto, 'body'),
   async (req, res, next) => {
     const body = req.body;
@@ -72,7 +79,8 @@ router.post(
 
 router.patch(
   '/:id',
-  validatorHandler(getProductDto, 'params'),
+  authHandler,
+  validatorHandler(getProductIdDto, 'params'),
   validatorHandler(updateProductDto, 'body'),
   async (req, res, next) => {
     try {
@@ -93,39 +101,61 @@ router.patch(
   }
 );
 
-router.delete('/:id', async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const resp = await service.deleteDB(id);
-    res.json({
-      success: true,
-      message: 'Producto eliminado correctamente',
-      data: resp,
-    });
-  } catch (error) {
-    next(error);
+router.delete(
+  '/:id',
+  authHandler,
+  validatorHandler(getProductIdDto, 'params'),
+  async (req, res, next) => {
+    try {
+      const { id } = req.params;
+      const resp = await service.deleteDB(id);
+      res.json({
+        success: true,
+        message: 'Producto eliminado correctamente',
+        data: resp,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
-//RUTAS COMPLEJAS /:id/photos/
-//RUTAS COMPLEJAS ESPECIFICAS /:id/photos/:id
 router.get(
-  '/:idProduct/categories/',
-  validatorHandler(getProductCategoriesId, 'params'),
+  '/:id/subcategories/',
+  authHandler,
+  validatorHandler(getProductIdDto, 'params'),
   async (req, res, next) => {
     try {
       const { idProduct } = req.params;
       const product = await service.findOneDB(idProduct);
-      const { categories } = product;
-      const listOfCategories = await categoriesService.findDB(0, {
-        _id: { $in: categories },
-      });
+      const subcategories = await subCategoriesService.findByProductId();
       res.json({
         success: true,
-        message: 'Estas son las categorias encontradas:',
+        message: 'Estas son las sub categorias encontradas:',
         Data: {
-          producto: product,
-          categorias: listOfCategories,
+          product: product,
+          subcategories: subcategories,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+router.get(
+  '/:id/category/',
+  validatorHandler(getProductIdDto, 'params'),
+  async (req, res, next) => {
+    try {
+      const { idProduct } = req.params;
+      const product = await service.findOneDB(idProduct);
+      const category = await categoriesService.findOneD(product['idCategory']);
+      res.json({
+        success: true,
+        message: 'Estas es la categoria del producto:',
+        Data: {
+          product: product,
+          subcategories: category,
         },
       });
     } catch (error) {

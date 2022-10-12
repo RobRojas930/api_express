@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 const boom = require('@hapi/boom');
 const Model = require('../data/models/product.model');
 
-class ProductService {
+const { validateData, NOTFOUND, CONFLICT } = require('../utils/utils');
+
+class ProductMediaService {
   constructor() {}
 
   async createDB(data) {
@@ -12,23 +15,8 @@ class ProductService {
 
   async findDB(data) {
     let response = {};
-    let { limit, priceRange, getBrands, filter } = data;
-    if (priceRange && typeof priceRange === 'string') {
-      var ranges = priceRange.split(';');
-      let priceMin = ranges[0];
-      let priceMax = ranges[1];
-      filter['price'] = { $gt: priceMin, $lt: priceMax };
-    }
+    let { limit, filter } = data;
     let productsDB = await Model.find(filter);
-
-    //Obtenemos de forma opcional las marcas
-    if (getBrands != undefined)
-      response['brands'] = getBrands
-        ? productsDB.map((x) => {
-            x.brand;
-          })
-        : [];
-
     //Obtenemos solo la cantidad deseada de registros
     response['products'] = limit
       ? productsDB.filter((item, index) => item && index < limit)
@@ -47,27 +35,30 @@ class ProductService {
     return product;
   }
 
+  // eslint-disable-next-line no-unused-vars
   async updateDB(id, changes) {
-    let product = await Model.findOne({
+    let productMedia = await Model.findOne({
       _id: id,
     });
-    let productOriginal = {
-      name: product.name,
-      price: product.price,
+    let productMediaOriginal = {
+      //DEFINIR
     };
-    const { name, price } = changes;
-    product.name = name;
-    product.price = price;
-    product.save();
+    //const { name, price } = changes;
+    //product.name = name;
+    //product.price = price;
+    //DEFINIR
+    productMedia.save();
 
     return {
-      original: productOriginal,
-      actualizado: product,
+      original: productMediaOriginal,
+      actualizado: {
+        /*DEFINIR*/
+      },
     };
   }
 
   async deleteDB(id) {
-    let product = await Model.findOne({
+    let productMedia = await Model.findOne({
       _id: id,
     });
     const { deletedCount } = await Model.deleteOne({
@@ -75,8 +66,8 @@ class ProductService {
     });
     if (deletedCount <= 0)
       throw boom.notFound('El registro seleccionado no existe');
-    return product;
+    return productMedia;
   }
 }
 
-module.exports = ProductService;
+module.exports = ProductMediaService;

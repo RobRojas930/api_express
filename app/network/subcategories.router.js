@@ -1,19 +1,21 @@
 const express = require('express');
-const ClientService = require('../service/client.service');
-const validatorHandler = require('../network/middlewares/validator.handler');
+const SubCategoryService = require('../services/subcategories.service');
+const service = new SubCategoryService();
+const validatorHandler = require('../middlewares/validator.handler');
 const {
-  createClientDto,
-  updateClientDto,
-  getClientDto,
-} = require('../data/dtos/client.dto');
+  createSubCategoryDto,
+  updateSubCategoryDto,
+  getSubCategoryIdDto,
+} = require('../dtos/subcategories.dto');
 
-const service = new ClientService();
 const router = express.Router();
 
 //SE USA NEXT PARA ACCEDER AL SIGUIENTE MIDDLEWARE
 router.get('/', async (req, res, next) => {
   try {
-    const data = await service.find();
+    const { limit } = req.query;
+    const filter = req.body;
+    const data = await service.findDB(limit, filter);
     res.json({
       success: true,
       message: 'Listo',
@@ -26,7 +28,7 @@ router.get('/', async (req, res, next) => {
 
 router.get(
   '/:id',
-  validatorHandler(createClientDto, 'params'),
+  validatorHandler(createSubCategoryDto, 'params'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -44,7 +46,7 @@ router.get(
 
 router.post(
   '/',
-  validatorHandler(getClientDto, 'body'),
+  validatorHandler(createSubCategoryDto, 'body'),
   async (req, res, next) => {
     const body = req.body;
     try {
@@ -62,8 +64,8 @@ router.post(
 
 router.patch(
   '/:id',
-  validatorHandler(getClientDto, 'params'),
-  validatorHandler(updateClientDto, 'body'),
+  validatorHandler(getSubCategoryIdDto, 'params'),
+  validatorHandler(updateSubCategoryDto, 'body'),
   async (req, res, next) => {
     try {
       const { id } = req.params;
@@ -81,5 +83,4 @@ router.delete('/:id', async (req, res) => {
   const resp = await service.delete(id);
   res.json(resp);
 });
-
 module.exports = router;

@@ -1,5 +1,4 @@
 const mongoose = require('mongoose');
-
 const Schema = mongoose.Schema;
 //MODELO DE LA BD
 const productSchema = new Schema({
@@ -7,8 +6,10 @@ const productSchema = new Schema({
   name: String,
   price: Number,
   image: String,
-  categories: Array,
+  idCategory: String,
+  subCategories: Array, //Arreglo de Ids
   brand: String,
+  count: Number
 });
 const model = mongoose.model('products', productSchema);
 module.exports = model;

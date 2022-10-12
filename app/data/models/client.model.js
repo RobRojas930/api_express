@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const containedProducts = require('../models/containedProducts.model');
+const containedProducts = require('./containedProducts.model');
 
 const Schema = mongoose.Schema;
 //MODELO DE LA BD

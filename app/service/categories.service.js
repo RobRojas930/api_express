@@ -1,26 +1,9 @@
-const faker = require('faker');
 // eslint-disable-next-line no-unused-vars
 const boom = require('@hapi/boom');
 const Model = require('../data/models/category.model');
 
 class CategoryService {
-  constructor() {
-    this.categories = [];
-    this.generate();
-  }
-
-  generate() {
-    const limit = 100;
-    for (let index = 0; index < limit; index++) {
-      this.categories.push({
-        isActive: true,
-        id: faker.random.uuid(),
-        name: faker.name.title(),
-        price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.imageUrl(),
-      });
-    }
-  }
+  constructor() {}
 
   async createDB(data) {
     const model = new Model(data);

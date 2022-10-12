@@ -1,28 +1,9 @@
-const faker = require('faker');
 const boom = require('@hapi/boom');
-const Model = require('../data/models/order.model');
-const productsModel = require('../data/models/containedProducts.model');
-
-const { validateData, NOTFOUND, CONFLICT } = require('../utils/utils');
+const Model = require('../data/subcategories.service.js/order.model');
+const productsModel = require('../data/subcategories.service.js/containedProducts.model');
 
 class OrderService {
-  constructor() {
-    this.orders = [];
-    this.generate();
-  }
-
-  generate() {
-    const limit = 100;
-    for (let index = 0; index < limit; index++) {
-      this.orders.push({
-        isActive: true,
-        id: faker.random.uuid(),
-        name: faker.commerce.OrderName(),
-        price: parseInt(faker.commerce.price(), 10),
-        image: faker.image.imageUrl(),
-      });
-    }
-  }
+  constructor() {}
 
   async createDB(data) {
     const model = new Model(data);
@@ -137,65 +118,6 @@ class OrderService {
       order['products'].push(newProductToAdd);
     }
     await order.save();
-  }
-
-  //FAKER
-  async create(data) {
-    const newOrder = {
-      id: faker.random.uuid(),
-      ...data,
-    };
-    this.orders.push(newOrder);
-    return newOrder;
-  }
-
-  //AQUÍ YA NO SE REQUIERE ASYNC POR QUE EL PROMISE LO RESUELVE INTERNAMENTE
-  find() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const activeOrders = this.orders.filter((x) => x.isActive === true);
-        resolve(activeOrders);
-      }, 2000);
-    });
-  }
-
-  async findOne(id) {
-    //const name = this.getTotal(); PRUEBA DE ERROR DE TRY Y CATCH
-    const Order = this.orders.find((item) => item.id === id);
-    //NOT FOUND
-    validateData(Order, NOTFOUND, 'No encontrado', (data) => !data);
-    validateData(
-      Order,
-      CONFLICT,
-      'CONFLICTO, el Ordero esta bloqueado.',
-      (data) => data.isActive == false
-    );
-    return Order;
-  }
-
-  async update(id, changes) {
-    const index = this.orders.findIndex((item) => item.id === id);
-    if (index === -1) throw boom.notFound('Orden no encontrada'); //Forma con boom
-    //throw new Error('Order not found'); Forma tradicional
-
-    var currentOrder = this.orders[index];
-    this.orders[index] = {
-      ...currentOrder,
-      ...changes,
-    };
-    return this.orders[index];
-  }
-
-  async delete(id) {
-    const index = this.orders.findIndex((item) => item.id == id);
-    if (index === -1) {
-      throw new Error('Orden no encontrada');
-    }
-    this.orders.splice(index, 1);
-    return {
-      message: 'Eliminado',
-      id,
-    };
   }
 }
 

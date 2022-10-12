@@ -2,10 +2,11 @@ const mongoose = require('mongoose');
 
 const Schema = mongoose.Schema;
 //MODELO DE LA BD
-const categorySchema = new Schema({
+const storageSchema = new Schema({
   id: mongoose.Types.ObjectId,
-  idProduct: String,
   name: String,
+  filename: String,
+  path: String,
 });
-const model = mongoose.model('categories', categorySchema);
+const model = mongoose.model('storage', storageSchema);
 module.exports = model;
