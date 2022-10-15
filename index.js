@@ -22,7 +22,6 @@ app.use(
 app.use(express.static('app/storage')); //Sacarlos Recursos estaticos de esta carpeta
 
 
-//app.use(customHeader);
 routerApi(app);
 app.use(logErrors); //El orden de los use es imPORTante
 app.use(boomErrorHandler);
