@@ -17,31 +17,37 @@ const authHandler = require('./middlewares/auth.handler');
 const router = express.Router();
 
 //SE USA NEXT PARA ACCEDER AL SIGUIENTE MIDDLEWARE
-router.get('/', authHandler, checkRolHandler(['admin']), async (req, res, next) => {
-  const user = req.user;
-  const { limit, priceRange, getBrands } = req.query;
-  const filter = req.body;
-  try {
-    const products = await service.findDB(
-      limit || 10,
-      priceRange,
-      getBrands,
-      filter
-    );
-    res.json({
-      success: true,
-      message: 'Estos son todos los productos',
-      data: products,
-      user: user,
-    });
-  } catch (error) {
-    next(error);
+router.get(
+  '/',
+  authHandler,
+  checkRolHandler(['user']),
+  async (req, res, next) => {
+    const user = req.user;
+    const { limit, priceRange, getBrands } = req.query;
+    const filter = req.body;
+    try {
+      const products = await service.findDB(
+        limit || 10,
+        priceRange,
+        getBrands,
+        filter
+      );
+      res.json({
+        success: true,
+        message: 'Estos son todos los productos',
+        data: products,
+        user: user,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.get(
   '/:id',
   authHandler,
+  checkRolHandler(['admin']),
   validatorHandler(getProductIdDto, 'params'),
   async (req, res, next) => {
     try {

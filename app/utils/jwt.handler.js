@@ -10,7 +10,6 @@ const signToken = async (user) => {
   return signToken;
 };
 const verifyToken = async (tokenJwt) => {
-
     try {
       return jwt.verify(tokenJwt, JWT_SECRET);
     } catch (e) {
