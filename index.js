@@ -1,6 +1,7 @@
 const express = require('express');
 const db = require('./db');
-require("dotenv").config();
+require('dotenv').config();
+const cors = require('cors');
 const routerApi = require('./app/network/index');
 const {
   errorHandler,
@@ -14,13 +15,13 @@ db(DBURL);
 const app = express();
 const PORT = 3000;
 
+app.use(cors());
 app.use(
   express.json(
     { extended: false } // permite codificar matrices y objetos enriquecidos en formato codificado en url
   )
 ); //Selección de tipo de analisis de datos
 app.use(express.static('app/storage')); //Sacarlos Recursos estaticos de esta carpeta
-
 
 routerApi(app);
 app.use(logErrors); //El orden de los use es imPORTante
