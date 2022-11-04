@@ -5,7 +5,7 @@ const {
   createPostDto,
   updatePostDto,
   getPostDto,
-} = require('../data/dtos/Post.dto');
+} = require('../data/dtos/post.dto');
 
 const service = new PostService();
 const router = express.Router();
