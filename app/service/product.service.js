@@ -1,5 +1,5 @@
 const boom = require('@hapi/boom');
-const Model = require('../data/models/product.model');
+const Model = require('./../data/models/product.model');
 
 class ProductService {
   constructor() {}

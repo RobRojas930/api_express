@@ -1,6 +1,6 @@
 
 const boom = require('@hapi/boom');
-const Model = require('../data/models/Storage.model');
+const Model = require('./../data/models/Storage.model');
 
 class StorageService {
   constructor() {}
